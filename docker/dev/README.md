@@ -11,9 +11,20 @@ This folder defines a Docker-based development workspace for this project.
 
 ## Files In This Folder
 
-- `Dockerfile`: Builds the base dev image using micromamba and `environment.yml`.
-- `environment.yml`: Declares Python version and dependencies to install.
+- `Dockerfile`: Builds the Ubuntu 24.04 based dev image and installs Python tooling with `apt`.
+- `environment.yml`: Legacy conda environment reference (currently not used by the Ubuntu Dockerfile).
 - `compose.dev.yaml`: Defines how to run the dev container.
+
+## Current Host Mount
+
+The compose file currently mounts:
+
+- Host: `C:/Users/raulr/OneDrive/Works/learning`
+- Container: `/workspace`
+
+Project root inside container is therefore:
+
+- `/workspace/ai-ml-skill/shopping-agent`
 
 ## Prerequisites
 
@@ -37,15 +48,15 @@ docker exec -it aiml-dev-container bash
 Inside the container, run your app:
 
 ```bash
-micromamba run -n base python -m agent_app.cli
+python -m agent_app.cli
 ```
 
 ## How It Works
 
 1. Docker builds the image from `docker/dev/Dockerfile`.
 2. During startup, Compose runs:
-   - `micromamba run -n base pip install -e .`
-   - `micromamba run -n base python -V`
+   - `python -m pip install -e .` (only when `pyproject.toml` exists)
+   - `python -V`
    - `sleep infinity`
 3. `pip install -e .` means your local code changes are reflected immediately.
 4. The container stays alive so you can attach anytime.
@@ -84,13 +95,20 @@ If you run the vLLM setup from `docker/llm`, this value is already aligned.
 ## Troubleshooting
 
 `pip: command not found`
-- Use `micromamba run -n base pip ...` inside container. This is already handled in `compose.dev.yaml`.
+- Use `python -m pip ...` inside container. This is already handled in `compose.dev.yaml`.
+
+`externally-managed-environment` (PEP 668)
+- The image uses `/opt/venv` and sets it in `PATH`, so `python` and `pip` resolve to virtualenv binaries.
+- Use `python -m pip ...`, not system-level `python3 -m pip ...`.
 
 Container keeps restarting
 - Check logs: `docker logs -f aiml-dev-container`.
 - Most common cause is command failure during startup.
 
+`pyproject.toml not found, skipping editable install`
+- Informational message only.
+- The container starts normally, but project package is not auto-installed.
+
 Code changes not reflected
 - Confirm volume mount exists in `compose.dev.yaml`.
 - Confirm you are editing files in the same repo path you mounted.
-

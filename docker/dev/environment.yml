@@ -1,5 +1,6 @@
-# Conda-style environment specification for the dev container.
-# This file controls which tools and Python libraries are preinstalled.
+# Legacy Conda-style environment specification.
+# NOTE: docker/dev/Dockerfile now uses Ubuntu 24.04 + apt + pip, so this file is
+# currently reference-only unless you switch back to a conda/mamba-based image.
 channels:
   # Community package channel with broad Python ecosystem coverage.
   - conda-forge

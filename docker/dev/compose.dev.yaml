@@ -22,14 +22,14 @@ services:
     stdin_open: true
     tty: true
 
-    # Main working folder inside container.
-    working_dir: /workspace
+    # Main working folder inside container (project root inside mounted "learning" folder).
+    working_dir: /workspace/ai-ml-skill/shopping-agent
 
     volumes:
-      # Mount project source code into container.
-      # Left side = local machine path (repo root).
+      # Mount the broader local "learning" folder into container.
+      # Left side = Windows host path.
       # Right side = container path.
-      - ../..:/workspace
+      - C:/Users/raulr/OneDrive/Works/learning:/workspace
 
     environment:
       # App can call any OpenAI-compatible endpoint through this base URL.
@@ -53,12 +53,10 @@ services:
       - dev-net
 
     # Startup flow:
-    # 1) Install this project in editable mode (so code changes are immediately reflected)
+    # 1) If pyproject.toml exists, install project in editable mode
     # 2) Print Python version for quick confirmation
     # 3) Sleep forever so container stays available for shell sessions
-    #
-    # "micromamba run -n base" ensures pip/python come from the managed environment.
-    command: ["bash", "-lc", "micromamba run -n base pip install -e . && micromamba run -n base python -V && sleep infinity"]
+    command: ["bash", "-lc", "if [ -f pyproject.toml ]; then python -m pip install -e .; else echo 'pyproject.toml not found, skipping editable install'; fi && python -V && sleep infinity"]
 
 networks:
   dev-net:
