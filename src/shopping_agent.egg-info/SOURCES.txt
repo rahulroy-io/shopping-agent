@@ -1,0 +1,12 @@
+README.md
+pyproject.toml
+src/agent_app/__init__.py
+src/agent_app/cli.py
+src/agent_app/core.py
+src/agent_app/llm_client.py
+src/shopping_agent.egg-info/PKG-INFO
+src/shopping_agent.egg-info/SOURCES.txt
+src/shopping_agent.egg-info/dependency_links.txt
+src/shopping_agent.egg-info/entry_points.txt
+src/shopping_agent.egg-info/top_level.txt
+tests/test_smoke.py

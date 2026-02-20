@@ -1,0 +1,66 @@
+# This Compose file creates a "development workstation" container.
+# You edit files on Windows, and the same files appear inside the container.
+services:
+  dev:
+    # Name of the built image on your machine.
+    image: aiml-dev-img
+
+    # Build instructions for the image.
+    build:
+      # "../../" means repository root, because this file lives in docker/dev.
+      context: ../..
+      # Dockerfile path from the build context root.
+      dockerfile: docker/dev/Dockerfile
+
+    # Friendly static container name so commands are easy to remember.
+    container_name: aiml-dev-container
+
+    # If container exits, Docker restarts it automatically unless you stop it manually.
+    restart: unless-stopped
+
+    # Keep STDIN/TTY open so interactive shells behave naturally.
+    stdin_open: true
+    tty: true
+
+    # Main working folder inside container.
+    working_dir: /workspace
+
+    volumes:
+      # Mount project source code into container.
+      # Left side = local machine path (repo root).
+      # Right side = container path.
+      - ../..:/workspace
+
+    environment:
+      # App can call any OpenAI-compatible endpoint through this base URL.
+      # Current default points to host machine port 8000.
+      - LLM_BASE_URL=http://host.docker.internal:8000/v1
+
+      # Placeholder API key for local services that require a non-empty key.
+      # Replace with real key for remote providers.
+      - LLM_API_KEY=dummy
+
+      # Consistent Python runtime behavior.
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+
+    extra_hosts:
+      # Lets container resolve "host.docker.internal" to your Windows host.
+      - "host.docker.internal:host-gateway"
+
+    networks:
+      # Attach this service to isolated bridge network declared below.
+      - dev-net
+
+    # Startup flow:
+    # 1) Install this project in editable mode (so code changes are immediately reflected)
+    # 2) Print Python version for quick confirmation
+    # 3) Sleep forever so container stays available for shell sessions
+    #
+    # "micromamba run -n base" ensures pip/python come from the managed environment.
+    command: ["bash", "-lc", "micromamba run -n base pip install -e . && micromamba run -n base python -V && sleep infinity"]
+
+networks:
+  dev-net:
+    # Default isolated local Docker network.
+    driver: bridge

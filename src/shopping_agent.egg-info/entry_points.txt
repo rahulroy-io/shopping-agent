@@ -1,0 +1,2 @@
+[console_scripts]
+shopping-agent = agent_app.cli:main

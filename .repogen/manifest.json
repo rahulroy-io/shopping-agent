@@ -1,0 +1,46 @@
+{
+  "toolVersion": "0.1.0",
+  "timestamp": "2026-02-19T20:57:02.0979157+00:00",
+  "resolvedComponents": [
+    "base-agent"
+  ],
+  "generatedFiles": [
+    {
+      "path": ".env.example",
+      "sha256": "a6fa3fba3845bda1b64b03eb365c97d2b87b402303e01aa912f93a71e2475126"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "0180eb3fe10e1f2decab37a3ea90065ea27564731b900226dfdbafab6571d0f2"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "8648a34c10b4d89545e515f07f6035d2653474e8d0ba289ee4824a602da0e548"
+    },
+    {
+      "path": "README.md",
+      "sha256": "d0e903851cd9523e8af48c23a62b22b2843120c7b53125653532f2de51987e4b"
+    },
+    {
+      "path": "src/agent_app/__init__.py",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "src/agent_app/cli.py",
+      "sha256": "40124cf777efe6762a5b1aa8fdbd566a79709de274521db61a377daec67966d6"
+    },
+    {
+      "path": "src/agent_app/core.py",
+      "sha256": "f19f58aa0ce19e75d7639460fcfce47c4e77981159257c9beced91681f0742e6"
+    },
+    {
+      "path": "tests/test_smoke.py",
+      "sha256": "64a473b644de952b99520b71ebab5b655beb6365ea6c92123613dcf76fdfc3ee"
+    }
+  ],
+  "specHash": "7f4abffdfabb194a5d4d167319eab0b8c2ea70e1c18f20fd98abe387bb15f369",
+  "archetype": {
+    "variant": "python-shopping",
+    "type": "agent"
+  }
+}

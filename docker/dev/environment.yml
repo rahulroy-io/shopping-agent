@@ -1,0 +1,30 @@
+# Conda-style environment specification for the dev container.
+# This file controls which tools and Python libraries are preinstalled.
+channels:
+  # Community package channel with broad Python ecosystem coverage.
+  - conda-forge
+dependencies:
+  # Pinning major/minor version gives reproducible interpreter behavior.
+  - python=3.11
+
+  # Packaging/build helpers used by editable installs.
+  - pip
+  - setuptools
+  - wheel
+
+  # General utility tools often useful in development containers.
+  - git
+  - curl
+  - ca-certificates
+  - openssl
+
+  # Core runtime libraries used by this project and related experiments.
+  - requests
+  - httpx
+  - pydantic
+  - rich
+  - ipython
+
+  # Packages installed from PyPI (pip), usually when conda package is not required.
+  - pip:
+      - openai

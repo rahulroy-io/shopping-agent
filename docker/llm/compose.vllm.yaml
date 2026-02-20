@@ -1,0 +1,47 @@
+# This Compose file runs a local LLM server (vLLM) with an OpenAI-compatible API.
+# Your app can call it using http://<host>:8000/v1
+services:
+  llm:
+    # Official vLLM image that exposes OpenAI-style endpoints.
+    image: vllm/vllm-openai:latest
+
+    # Stable name for easier "docker logs" and "docker exec" usage.
+    container_name: vllm-qwen3vl
+
+    # Keep trying to run unless explicitly stopped.
+    restart: unless-stopped
+
+    # Publish container API port to host machine.
+    # Format: "host_port:container_port"
+    ports:
+      - "8000:8000"
+
+    # Share host IPC namespace; often recommended for high-throughput inference.
+    ipc: host
+
+    # Runtime env vars consumed by vLLM.
+    environment:
+      - VLLM_WORKER_MULTIPROC_METHOD=spawn
+
+    # Persist downloaded model files on host so they are reused between restarts.
+    # IMPORTANT: update host path for your machine if needed.
+    volumes:
+      - C:/Users/raulr/workdir-local/docker/hf-cache:/root/.cache/huggingface
+
+    # Model + runtime arguments passed to vLLM entrypoint.
+    # Replace model ID with one you want to serve.
+    command: >
+      Qwen/Qwen3-VL-8B-Instruct-FP8
+      --max-model-len 4096
+      --gpu-memory-utilization 0.85
+      --dtype auto
+
+    # Request NVIDIA GPU access.
+    # Requires NVIDIA drivers + NVIDIA Container Toolkit on host.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
